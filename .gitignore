@@ -1,0 +1,82 @@
+# .NET Core and Visual Studio files
+.vs/
+bin/
+obj/
+*.dll
+*.exe
+*.pdb
+*.user
+*.suo
+*.tmp
+*.cache
+*.log
+*.vspscc
+*.vssscc
+.vscode/
+
+# NuGet packages
+*.nuget.props
+*.nuget.targets
+project.lock.json
+packages/
+
+# Build results
+[Dd]ebug/
+[Rr]elease/
+*_i.c
+*_p.c
+*.ilk
+*.meta
+*.obj
+*.pch
+*.pdb
+*.pgc
+*.pgd
+*.rsp
+*.sbr
+*.tlb
+*.tli
+*.tlh
+*.tmp
+*.tmp_proj
+*.log
+*.vspscc
+*.vssscc
+.builds
+
+# MSTest test Results
+[Tt]est[Rr]esult*/
+[Bb]uild[Ll]og.*
+
+# NUNIT
+*.VisualState.xml
+TestResult.xml
+nunit-*.xml
+
+# Test Results
+[Tt]est[Rr]esult*/
+[Bb]uild[Ll]og.*
+
+# Publish / Output
+_PublishedWebsites/
+PublishProfiles/
+*.pubxml
+*.publishproj
+
+# Azure
+azure*.json
+**/App_Data/
+
+# StyleCop
+StyleCopReport.xml
+
+# Resharper
+_ReSharper*/
+*.sln.DotSettings.user
+
+# Visual Studio code coverage
+*.coverage
+*.coveragexml
+
+# Web Essentials
+_ProjectCachedWebResources
