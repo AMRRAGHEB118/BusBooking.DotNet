@@ -9,5 +9,7 @@ namespace BusBooking.DotNet.data
         {}
 
         public DbSet<User> Users { get; set; }
+
+        public DbSet<Admin> Admin { get; set; }
     }
 }
