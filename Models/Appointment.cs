@@ -1,4 +1,6 @@
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
 
 namespace BusBooking.DotNet.Models
 {
@@ -7,7 +9,10 @@ namespace BusBooking.DotNet.Models
         [Key]
         public int Id { get; set; }
         [Required]
+        [ForeignKey(nameof(BusDestination))]
         public int BusDestinationId { get; set; }
+
+        public BusDestination BusDestination { get; set; }
         [Required]
         public DateTime DateTime { get; set; }
         [Required]

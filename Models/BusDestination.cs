@@ -9,6 +9,8 @@ namespace BusBooking.DotNet.Models
         [Required]
         [MaxLength(50)]
         public string DestinationName { get; set; }
+
+        public List<Appointment> Appointments { get; set; }
         public DateTime CreatedAt { get; set; } = DateTime.Now;
         public DateTime UpdatedAt { get; set; } = DateTime.Now;
     }
