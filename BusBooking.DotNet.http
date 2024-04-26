@@ -1,6 +1,0 @@
-@BusBooking.DotNet_HostAddress = http://localhost:5191
-
-GET {{BusBooking.DotNet_HostAddress}}/weatherforecast/
-Accept: application/json
-
-###

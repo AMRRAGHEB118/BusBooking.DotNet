@@ -47,7 +47,7 @@ namespace BusBooking.DotNet.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Admin");
+                    b.ToTable("Admin", (string)null);
                 });
 
             modelBuilder.Entity("BusBooking.DotNet.Models.Appointment", b =>
@@ -80,7 +80,7 @@ namespace BusBooking.DotNet.Migrations
 
                     b.HasIndex("BusDestinationId");
 
-                    b.ToTable("Appointments");
+                    b.ToTable("Appointments", (string)null);
                 });
 
             modelBuilder.Entity("BusBooking.DotNet.Models.AppointmentRequest", b =>
@@ -106,7 +106,7 @@ namespace BusBooking.DotNet.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("AppointmentRequests");
+                    b.ToTable("AppointmentRequests", (string)null);
                 });
 
             modelBuilder.Entity("BusBooking.DotNet.Models.BusDestination", b =>
@@ -130,7 +130,7 @@ namespace BusBooking.DotNet.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("BusDestinations");
+                    b.ToTable("BusDestinations", (string)null);
                 });
 
             modelBuilder.Entity("BusBooking.DotNet.Models.TravelerAppointment", b =>
@@ -155,7 +155,7 @@ namespace BusBooking.DotNet.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("TravelerAppointments");
+                    b.ToTable("TravelerAppointments", (string)null);
                 });
 
             modelBuilder.Entity("BusBooking.DotNet.Models.User", b =>
@@ -183,7 +183,7 @@ namespace BusBooking.DotNet.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Users");
+                    b.ToTable("Users", (string)null);
                 });
 
             modelBuilder.Entity("BusBooking.DotNet.Models.Appointment", b =>
