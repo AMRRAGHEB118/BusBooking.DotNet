@@ -29,28 +29,28 @@ namespace BusBooking.DotNet.Controllers
         }
 
 
-        [HttpPost]
-        public async Task<ActionResult<List<User>>> AddUser(User user)
-        {
-            _dbContext.Users.Add(user);
-            await _dbContext.SaveChangesAsync();
-            return Ok(await _dbContext.Users.ToListAsync());
-        }
+        // [HttpPost]
+        // public async Task<ActionResult<List<User>>> AddUser(User user)
+        // {
+        //     _dbContext.Users.Add(user);
+        //     await _dbContext.SaveChangesAsync();
+        //     return Ok(await _dbContext.Users.ToListAsync());
+        // }
 
 
-        [HttpPut("{id}")]
-        public async Task<ActionResult<List<User>>> UpdateUser(User request, int id)
-        {
-            var dbUser = await _dbContext.Users.FindAsync(id);
-            if (dbUser == null)
-                return NotFound($"User with Id = {id} not found");
+        // [HttpPut("{id}")]
+        // public async Task<ActionResult<List<User>>> UpdateUser(User request, int id)
+        // {
+        //     var dbUser = await _dbContext.Users.FindAsync(id);
+        //     if (dbUser == null)
+        //         return NotFound($"User with Id = {id} not found");
 
-            dbUser.Name = request.Name;
-            dbUser.Email = request.Email;
-            dbUser.Password = request.Password;
-            await _dbContext.SaveChangesAsync();
-            return Ok(await _dbContext.Users.ToListAsync());
-        }
+        //     dbUser.UserName = request.Name;
+        //     dbUser.Email = request.Email;
+        //     dbUser. = request.Password;
+        //     await _dbContext.SaveChangesAsync();
+        //     return Ok(await _dbContext.Users.ToListAsync());
+        // }
 
 
         [HttpDelete("{id}")]

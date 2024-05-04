@@ -13,7 +13,7 @@ namespace BusBooking.DotNet.Models
         [ForeignKey(nameof(BusDestination))]
         public int BusDestinationId { get; set; }
 
-        public BusDestination BusDestination { get; set; }
+        public required BusDestination BusDestination { get; set; }
 
         [Required]
         public DateTime DateTime { get; set; }

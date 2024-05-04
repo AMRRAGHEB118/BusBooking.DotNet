@@ -23,16 +23,12 @@ namespace BusBooking.DotNet.Controllers
         public class AppointmentRequestResponse
         {
             public int RequestId { get; set; }
-            public string RequestStatus { get; set; }
-            public int TravelerId { get; set; }
-            public string TravelerName { get; set; }
-            public string TravelerEmail { get; set; }
-            public int AppointmentId { get; set; }
+            public required string RequestStatus { get; set; }
+            public required string TravelerName { get; set; }
             public DateTime DateTime { get; set; }
-            public int BusDestinationId { get; set; }
             public int Capacity { get; set; }
             public int Booked { get; set; }
-            public string DestinationName { get; set; }
+            public required string DestinationName { get; set; }
         }
 
         [HttpGet]
@@ -47,12 +43,8 @@ namespace BusBooking.DotNet.Controllers
                                             {
                                                 RequestId = appointmentRequestRecord.Id,
                                                 RequestStatus = appointmentRequestRecord.Status,
-                                                TravelerId = traveler.Id,
-                                                TravelerName = traveler.Name,
-                                                TravelerEmail = traveler.Email,
-                                                AppointmentId = appointment.Id,
+                                                TravelerName = traveler.UserName ?? "Unknown",
                                                 DateTime = appointment.DateTime,
-                                                BusDestinationId = appointment.BusDestinationId,
                                                 Capacity = appointment.Capacity,
                                                 Booked = appointment.Booked,
                                                 DestinationName = busDestination.DestinationName
@@ -61,7 +53,7 @@ namespace BusBooking.DotNet.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<AppointmentRequestResponse>> Get(int id)
+        public async Task<ActionResult<AppointmentRequestResponse>> Get(string id)
         {
             var appointmentRequest = await (from appointmentRequestRecord in _dbContext.AppointmentRequests
                                             join travelerAppointment in _dbContext.TravelerAppointments on appointmentRequestRecord.TravelerAppointmentId equals travelerAppointment.Id
@@ -73,12 +65,8 @@ namespace BusBooking.DotNet.Controllers
                                             {
                                                 RequestId = appointmentRequestRecord.Id,
                                                 RequestStatus = appointmentRequestRecord.Status,
-                                                TravelerId = traveler.Id,
-                                                TravelerName = traveler.Name,
-                                                TravelerEmail = traveler.Email,
-                                                AppointmentId = appointment.Id,
+                                                TravelerName = traveler.UserName ?? "Unknown",
                                                 DateTime = appointment.DateTime,
-                                                BusDestinationId = appointment.BusDestinationId,
                                                 Capacity = appointment.Capacity,
                                                 Booked = appointment.Booked,
                                                 DestinationName = busDestination.DestinationName
@@ -95,7 +83,12 @@ namespace BusBooking.DotNet.Controllers
 
             if (status.ToLower() == "approved") {
                 var dbTravelerAppointment = await _dbContext.TravelerAppointments.FindAsync(dbRequest.TravelerAppointmentId);
+                if (dbTravelerAppointment == null)
+                    return BadRequest("Traveler Appointment not found");
+
                 var dbAppointment = await _dbContext.Appointments.FindAsync(dbTravelerAppointment.AppointmentId);
+                if (dbAppointment == null)
+                    return BadRequest("Traveler or Appointment not found");
 
                 if(dbAppointment.Booked < dbAppointment.Capacity) {
                     dbAppointment.Booked += 1;
@@ -119,13 +112,16 @@ namespace BusBooking.DotNet.Controllers
             _dbContext.AppointmentRequests.Remove(dbRequest);
             await _dbContext.SaveChangesAsync();
             var dbTravelerAppointment = await _dbContext.TravelerAppointments.FindAsync(dbRequest.TravelerAppointmentId);
-            _dbContext.TravelerAppointments.Remove(dbTravelerAppointment);
+
+            if (dbTravelerAppointment != null) 
+                _dbContext.TravelerAppointments.Remove(dbTravelerAppointment);
+
             await _dbContext.SaveChangesAsync();
             return Ok("Request deleted successfully");
         }
 
         [HttpPost]
-        public async Task<ActionResult<List<AppointmentRequestResponse>>> AddRequest(int id, int appointmentId)
+        public async Task<ActionResult<List<AppointmentRequestResponse>>> AddRequest(string id, int appointmentId)
         {
             var traveler = await _dbContext.Users.FindAsync(id);
             var appointment = await _dbContext.Appointments.FindAsync(appointmentId);

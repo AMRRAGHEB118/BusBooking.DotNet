@@ -8,9 +8,9 @@ namespace BusBooking.DotNet.Models
         public int Id { get; set; }
         [Required]
         [MaxLength(50)]
-        public string DestinationName { get; set; }
+        public required string DestinationName { get; set; }
 
-        public List<Appointment> Appointments { get; set; }
+        public List<Appointment>? Appointments { get; set; }
         public DateTime CreatedAt { get; set; } = DateTime.Now;
         public DateTime UpdatedAt { get; set; } = DateTime.Now;
     }

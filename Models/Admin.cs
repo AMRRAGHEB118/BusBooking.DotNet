@@ -11,14 +11,14 @@ namespace BusBooking.DotNet.Models
 
         [Required]
         [MaxLength(50)]
-        public string Name { get; set; }
+        public required string UserName { get; set; }
 
         [Required]
         [MaxLength(100)]
-        public string Email { get; set; }
+        public required string Email { get; set; }
 
         [Required]
         [MaxLength(50)]
-        public string Password { get; set; }
+        public required string Password { get; set; }
     }
 }

@@ -6,9 +6,9 @@ namespace BusBooking.DotNet.Models
     {
         public static void RetrieveAndValidateAdminInfo()
         {
-            string name = Environment.GetEnvironmentVariable("ADMIN_NAME");
-            string email = Environment.GetEnvironmentVariable("ADMIN_EMAIL");
-            string password = Environment.GetEnvironmentVariable("ADMIN_PASSWORD");
+            string name = Environment.GetEnvironmentVariable("ADMIN_NAME") ?? string.Empty;
+            string email = Environment.GetEnvironmentVariable("ADMIN_EMAIL") ?? string.Empty;
+            string password = Environment.GetEnvironmentVariable("ADMIN_PASSWORD") ?? string.Empty;
 
             if (string.IsNullOrEmpty(name) || string.IsNullOrEmpty(password) || string.IsNullOrEmpty(email))
             {
