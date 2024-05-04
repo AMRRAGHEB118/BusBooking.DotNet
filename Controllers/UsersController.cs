@@ -21,12 +21,12 @@ namespace BusBooking.DotNet.Controllers
         private readonly DataContext _dbContext;
 
 
-        [HttpGet]
-        public async Task<ActionResult<List<User>>> Get()
-        {
-            var users = await _dbContext.Users.ToListAsync();
-            return Ok(users);
-        }
+        // [HttpGet]
+        // public async Task<ActionResult<List<AppUser>>> Get()
+        // {
+        //     var users = await _dbContext.Users.ToListAsync();
+        //     return Ok(users);
+        // }
 
 
         // [HttpPost]
@@ -53,16 +53,16 @@ namespace BusBooking.DotNet.Controllers
         // }
 
 
-        [HttpDelete("{id}")]
-        public async Task<ActionResult<List<User>>> Delete(int id)
-        {
-            var dbUser = await _dbContext.Users.FindAsync(id);
-            if (dbUser == null)
-                return NotFound($"User with Id = {id} not found");
+        // [HttpDelete("{id}")]
+        // public async Task<ActionResult<List<AppUser>>> Delete(int id)
+        // {
+        //     var dbUser = await _dbContext.Users.FindAsync(id);
+        //     if (dbUser == null)
+        //         return NotFound($"User with Id = {id} not found");
 
-            _dbContext.Users.Remove(dbUser);
-            await _dbContext.SaveChangesAsync();
-            return Ok(await _dbContext.Users.ToListAsync());
-        }
+        //     _dbContext.Users.Remove(dbUser);
+        //     await _dbContext.SaveChangesAsync();
+        //     return Ok(await _dbContext.Users.ToListAsync());
+        // }
     }
 }
