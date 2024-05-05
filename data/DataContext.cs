@@ -9,7 +9,6 @@ namespace BusBooking.DotNet.data
         public DataContext(DbContextOptions<DataContext> options) : base(options)
         {}
 
-        public DbSet<Admin> Admin { get; set; }
         public DbSet<BusDestination> BusDestinations { get; set; }
         public DbSet<TravelerAppointment> TravelerAppointments { get; set; }
         public DbSet<Appointment> Appointments { get; set; }
