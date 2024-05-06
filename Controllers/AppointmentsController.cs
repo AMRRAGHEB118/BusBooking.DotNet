@@ -78,7 +78,7 @@ namespace BusBooking.DotNet.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<ActionResult<List<Appointment>>> UpdateAppointment(DateTime dateTime, int id)
+        public async Task<ActionResult<List<RetrievedAppointment>>> UpdateAppointment(DateTime dateTime, int id)
         {
             var dbAppointment = await _dbContext.Appointments.FindAsync(id);
             if (dbAppointment == null)
@@ -86,6 +86,7 @@ namespace BusBooking.DotNet.Controllers
 
             dbAppointment.DateTime = dateTime;
             _ = await _dbContext.SaveChangesAsync();
+            
 
             var appointments = await (from appointment in _dbContext.Appointments
                                     join busDestination in _dbContext.BusDestinations on appointment.BusDestinationId equals busDestination.Id
@@ -102,7 +103,7 @@ namespace BusBooking.DotNet.Controllers
         }
 
         [HttpDelete("{id}")]
-        public async Task<ActionResult<List<Appointment>>> Delete(int id)
+        public async Task<ActionResult<List<RetrievedAppointment>>> Delete(int id)
         {
             var dbAppointment = await _dbContext.Appointments.FindAsync(id);
             if (dbAppointment == null)
