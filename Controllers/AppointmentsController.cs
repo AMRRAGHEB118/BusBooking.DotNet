@@ -1,29 +1,39 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using BusBooking.DotNet.data;
 using BusBooking.DotNet.Models;
+using BusBooking.DotNet.Dto;
 
 namespace BusBooking.DotNet.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class AppointmentsController : ControllerBase
+    public class AppointmentsController(DataContext dbContext) : ControllerBase
     {
-        AppointmentsController(DataContext dbContext)
-        {
-            _dbContext = dbContext;
-        }
-
-        private readonly DataContext _dbContext;
+        public class RetrievedAppointment {
+            public int Id { get; set; }
+            public int BusDestinationId { get; set; }
+            public DateTime DateTime { get; set; }
+            public int Capacity { get; set; }
+            public int Booked { get; set; }
+            public required string DestinationName { get; set; }
+        } 
+        private readonly DataContext _dbContext = dbContext;
 
         [HttpGet]
-        public async Task<ActionResult<List<Appointment>>> Get()
+        public async Task<ActionResult<List<RetrievedAppointment>>> Get()
         {
-            var appointments = await _dbContext.Appointments.ToListAsync();
+            var appointments = await (from appointment in _dbContext.Appointments
+                                    join busDestination in _dbContext.BusDestinations on appointment.BusDestinationId equals busDestination.Id
+                                    select new RetrievedAppointment {
+                                        Id = appointment.Id,
+                                        BusDestinationId = appointment.BusDestinationId,
+                                        DateTime = appointment.DateTime,
+                                        Capacity = appointment.Capacity,
+                                        Booked = appointment.Booked,
+                                        DestinationName = busDestination.DestinationName
+                                    }
+                                ).ToListAsync();
             return Ok(appointments);
         }
 
@@ -37,31 +47,58 @@ namespace BusBooking.DotNet.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<List<Appointment>>> AddAppointment(Appointment appointment)
+        public async Task<ActionResult<List<Appointment>>> AddAppointment(DtoNewAppointment newAppointment)
         {
-            var busDestination = await _dbContext.BusDestinations.FindAsync(appointment.BusDestinationId);
+            var dbBusDestination = await _dbContext.BusDestinations.FindAsync(newAppointment.BusDestinationId);
 
-            if (busDestination == null)
+            if (dbBusDestination == null)
                 return BadRequest("Bus Destination not found");
 
-            _dbContext.Appointments.Add(appointment);
-            await _dbContext.SaveChangesAsync();
-            return Ok(await _dbContext.Appointments.ToListAsync());
+            _  = _dbContext.Appointments.Add(new Appointment
+            {
+                BusDestinationId = newAppointment.BusDestinationId,
+                DateTime = newAppointment.DateTime,
+                Capacity = newAppointment.Capacity
+            });
+
+            _ = await _dbContext.SaveChangesAsync();
+
+            var appointments = await (from appointment in _dbContext.Appointments
+                                    join busDestination in _dbContext.BusDestinations on appointment.BusDestinationId equals busDestination.Id
+                                    select new RetrievedAppointment {
+                                        Id = appointment.Id,
+                                        BusDestinationId = appointment.BusDestinationId,
+                                        DateTime = appointment.DateTime,
+                                        Capacity = appointment.Capacity,
+                                        Booked = appointment.Booked,
+                                        DestinationName = busDestination.DestinationName
+                                    }
+                                ).ToListAsync();
+            return Ok(appointments);
         }
 
         [HttpPut("{id}")]
-        public async Task<ActionResult<List<Appointment>>> UpdateAppointment(Appointment request, int id)
+        public async Task<ActionResult<List<Appointment>>> UpdateAppointment(DateTime dateTime, int id)
         {
             var dbAppointment = await _dbContext.Appointments.FindAsync(id);
             if (dbAppointment == null)
                 return NotFound($"Appointment with Id = {id} not found");
 
-            dbAppointment.BusDestinationId = request.BusDestinationId;
-            dbAppointment.DateTime = request.DateTime;
-            dbAppointment.Capacity = request.Capacity;
-            dbAppointment.Booked = request.Booked;
-            await _dbContext.SaveChangesAsync();
-            return Ok(await _dbContext.Appointments.ToListAsync());
+            dbAppointment.DateTime = dateTime;
+            _ = await _dbContext.SaveChangesAsync();
+
+            var appointments = await (from appointment in _dbContext.Appointments
+                                    join busDestination in _dbContext.BusDestinations on appointment.BusDestinationId equals busDestination.Id
+                                    select new RetrievedAppointment {
+                                        Id = appointment.Id,
+                                        BusDestinationId = appointment.BusDestinationId,
+                                        DateTime = appointment.DateTime,
+                                        Capacity = appointment.Capacity,
+                                        Booked = appointment.Booked,
+                                        DestinationName = busDestination.DestinationName
+                                    }
+                                ).ToListAsync();
+            return Ok(appointments);
         }
 
         [HttpDelete("{id}")]
@@ -71,9 +108,21 @@ namespace BusBooking.DotNet.Controllers
             if (dbAppointment == null)
                 return NotFound($"Appointment with Id = {id} not found");
 
-            _dbContext.Appointments.Remove(dbAppointment);
-            await _dbContext.SaveChangesAsync();
-            return Ok(await _dbContext.Appointments.ToListAsync());
+            _ = _dbContext.Appointments.Remove(dbAppointment);
+            _ = await _dbContext.SaveChangesAsync();
+
+            var appointments = await (from appointment in _dbContext.Appointments
+                                    join busDestination in _dbContext.BusDestinations on appointment.BusDestinationId equals busDestination.Id
+                                    select new RetrievedAppointment {
+                                        Id = appointment.Id,
+                                        BusDestinationId = appointment.BusDestinationId,
+                                        DateTime = appointment.DateTime,
+                                        Capacity = appointment.Capacity,
+                                        Booked = appointment.Booked,
+                                        DestinationName = busDestination.DestinationName
+                                    }
+                                ).ToListAsync();
+            return Ok(appointments);
         }  
     }
 }

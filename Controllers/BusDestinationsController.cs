@@ -13,7 +13,7 @@ namespace BusBooking.DotNet.Controllers
     [Route("api/[controller]")]
     public class BusDestinationsController : ControllerBase
     {
-        BusDestinationsController(DataContext dbContext)
+        public BusDestinationsController(DataContext dbContext)
         {
             _dbContext = dbContext;
         }
@@ -28,9 +28,12 @@ namespace BusBooking.DotNet.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<List<BusDestination>>> AddDestination(BusDestination destination)
+        public async Task<ActionResult<List<BusDestination>>> AddDestination(string destination)
         {
-            _dbContext.BusDestinations.Add(destination);
+            _ = _dbContext.BusDestinations.Add(new BusDestination
+            {
+                DestinationName = destination
+            });
             await _dbContext.SaveChangesAsync();
             return Ok(await _dbContext.BusDestinations.ToListAsync());
         }

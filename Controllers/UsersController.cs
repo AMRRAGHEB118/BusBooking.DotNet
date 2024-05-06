@@ -6,6 +6,7 @@ using System.Security.Claims;
 using System.IdentityModel.Tokens.Jwt;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using Microsoft.AspNetCore.Authorization;
 
 namespace BusBooking.DotNet.Controllers
 {
@@ -126,7 +127,12 @@ namespace BusBooking.DotNet.Controllers
                             claims.Add(new Claim(ClaimTypes.Role, role.ToString()));
                         }
 
-                        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:secretKey"] ?? ""));
+                        byte[] keyBytes = Encoding.UTF8.GetBytes(_config["Jwt:secretKey"] ?? "");
+                        if (keyBytes.Length < 32)
+                        {
+                            Array.Resize(ref keyBytes, 32);
+                        }
+                        var key = new SymmetricSecurityKey(keyBytes);
                         var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
                         var token = new JwtSecurityToken(
@@ -145,16 +151,17 @@ namespace BusBooking.DotNet.Controllers
                     }
                     else
                     {
-                        return Unauthorized("Invalid password");
+                        return Unauthorized(new { message = "Invalid credentials" });
                     }
                 }
                 else
                 {
-                    return NotFound("User not found");
+                    return NotFound(new { message = "Invalid credentials" });
                 }
             }
             return BadRequest(ModelState);
         }
+
 
         [HttpGet]
         public async Task<ActionResult<List<Traveler>>> Get()
