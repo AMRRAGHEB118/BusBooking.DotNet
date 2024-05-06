@@ -89,7 +89,8 @@ namespace BusBooking.DotNet.Controllers
                 if (result.Succeeded)
                 {
                     await _userManager.AddToRoleAsync(newUser, "Traveler");
-                    return Ok("User created");
+                    var users = await _userManager.GetUsersInRoleAsync("Traveler");
+                    return Ok(users.Select(u => new { u.Id, u.UserName, u.Email, u.PhoneNumber }));
                 }
                 else
                 {
@@ -197,7 +198,8 @@ namespace BusBooking.DotNet.Controllers
             if (!result.Succeeded)
                 return BadRequest("Failed to delete user");
 
-            return Ok("User deleted");
+            var users = await _userManager.GetUsersInRoleAsync("Traveler");
+            return Ok(users.Select(u => new { u.Id, u.UserName, u.Email, u.PhoneNumber }));
         }
 
         [HttpPut("{id}")]
@@ -213,7 +215,9 @@ namespace BusBooking.DotNet.Controllers
             var result = await _userManager.UpdateAsync(dbUser);
             if (!result.Succeeded)
                 return BadRequest("Failed to update user");
-            return Ok("User updated");
+
+            var users = await _userManager.GetUsersInRoleAsync("Traveler");
+            return Ok(users.Select(u => new { u.Id, u.UserName, u.Email, u.PhoneNumber }));
         }
     }
 }
